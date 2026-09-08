@@ -38,6 +38,11 @@
 <link rel="apple-touch-icon" href="/static/icon-256.png">
 <link rel="manifest" href="/static/manifest.webmanifest">
 <meta name="apple-mobile-web-app-title" content="Bin day">
+<!-- Both spellings on purpose. mobile-web-app-capable is the standard name,
+     and Chrome warns that the apple- prefixed one is deprecated; the apple-
+     prefixed one is still what older iOS reads to open a home-screen launch
+     without Safari's chrome. Dropping either loses something. -->
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script type="module" src="/static/app.js"></script>
