@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>bin days — view preview</title>
+<link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+<!--
+  A harness for looking at the app's views without signing in.
+
+  It imports the real modules and the real stylesheet, and feeds them the
+  bin_schemes fixture, so what you see here is what the app renders. It is
+  not part of the published site: nothing under static/ references it, and
+  GitHub Pages simply serves it as another page.
+
+  Serve the repository over http (ES modules will not load from file://):
+      python3 -m http.server 8787
+      open http://localhost:8787/dev/preview.html
+-->
+<div class="topbar"></div>
+<div class="shell">
+  <header class="masthead">
+    <p class="wordmark">bin days</p>
+    <div class="account"><span class="whoami">preview</span></div>
+  </header>
+  <main id="main"></main>
+  <footer class="colophon" id="colophon"></footer>
+</div>
+
+<script type="module">
+import { replace } from '../static/dom.js';
+import { nextCollections, isDate } from '../static/resolve.js';
+import {
+  colophonView, heroView, sitesView, timetableView, unscheduledView, upcomingView,
+} from '../static/views.js';
+
+const schemes = (await (await fetch('../test/fixtures/bin_schemes.json')).json()).schemes;
+
+// Invented properties, already in the shape api.js hands to the views —
+// resolveSites() has folded the raw `sites` and `bin_schemes` documents
+// together by this point, so `bin_scheme` has become `schemeId` plus an
+// inlined `scheme`. The raw config shape is exercised in test/sites.test.mjs
+// instead. Real properties come from the sites namespace at runtime and are
+// deliberately not in this repository. The second name is long on purpose:
+// it is what proves the property switch still fits on a phone.
+const sites = [
+  { id: 'town', name: 'Town Flat', schemeId: 'edinburgh', scheme: schemes.edinburgh },
+  { id: 'country', name: 'The Country Cottage', schemeId: 'highland', scheme: schemes.highland },
+];
+
+// Fixed so the preview does not change under you from one day to the next.
+let viewDate = new URLSearchParams(location.search).get('date') || '2026-09-08';
+let siteId = new URLSearchParams(location.search).get('site') || 'town';
+
+function render() {
+  const site = sites.find((s) => s.id === siteId);
+  const next = nextCollections(site.scheme, viewDate);
+  const soonest = next.length ? next[0].date : null;
+
+  replace(document.getElementById('main'), [
+    sitesView({ sites, activeId: siteId, onSelect: (id) => { siteId = id; render(); } }),
+    next.length && heroView(next.filter((c) => c.date === soonest)),
+    next.length && next.some((c) => c.date !== soonest) &&
+      upcomingView(next.filter((c) => c.date !== soonest)),
+    timetableView(site.scheme, viewDate),
+    unscheduledView((site.scheme.bins || []).filter((b) => !isDate(b.anchor))),
+  ]);
+
+  replace(document.getElementById('colophon'), colophonView({
+    site,
+    fetchedAt: `${viewDate}T08:15:00Z`,
+    viewDate,
+    isToday: true,
+    onDate: (value) => { if (isDate(value)) { viewDate = value; render(); } },
+    onToday: () => {},
+  }));
+}
+
+render();
+</script>
+</body>
+</html>

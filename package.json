@@ -1,0 +1,9 @@
+{
+  "name": "bins",
+  "private": true,
+  "type": "module",
+  "description": "Front-end sources for the bin days app. No dependencies; node is used only to run the resolver tests.",
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  }
+}

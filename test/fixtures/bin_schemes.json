@@ -1,0 +1,94 @@
+{
+  "schemes": {
+    "edinburgh": {
+      "name": "City of Edinburgh Council",
+      "exceptions": [],
+      "bins": [
+        {
+          "id": "sacks",
+          "label": "Gull proof sack",
+          "colour": "#1F1F1F",
+          "description": "Non-recyclable waste, bagged inside the sack",
+          "anchor": "2026-09-08",
+          "weeks": 1
+        },
+        {
+          "id": "food",
+          "label": "Food caddy",
+          "colour": "#6B4E2E",
+          "description": "Food waste",
+          "anchor": "2026-09-08",
+          "weeks": 1
+        },
+        {
+          "id": "mixed",
+          "label": "Mixed Recycling",
+          "colour": "#E4322B",
+          "description": "Paper, card, plastics, metals and cartons — no glass",
+          "anchor": "2026-01-16",
+          "weeks": 2
+        },
+        {
+          "id": "glass",
+          "label": "Glass",
+          "colour": "#2E5FA3",
+          "description": "Glass bottles and jars",
+          "anchor": "2026-01-09",
+          "weeks": 2
+        },
+        {
+          "id": "garden",
+          "label": "Brown bin",
+          "colour": "#8B5E3C",
+          "description": "Garden waste",
+          "anchor": "2025-11-04",
+          "weeks": 2,
+          "exceptions": [
+            {
+              "from": "2025-12-15",
+              "to": "2026-01-12",
+              "suspend": true,
+              "note": "Festive pause, as printed on the Tue_2 garden calendar."
+            },
+            {
+              "from": "2026-12-15",
+              "to": "2027-01-11",
+              "suspend": true,
+              "note": "Provisional: mirrors 2025/26 (two collections skipped). Confirm at edinburgh.gov.uk/festivedates."
+            }
+          ]
+        }
+      ]
+    },
+    "highland": {
+      "name": "The Highland Council",
+      "exceptions": [],
+      "bins": [
+        {
+          "id": "grey",
+          "label": "Grey bin",
+          "colour": "#4A4A4A",
+          "description": "Non-recyclable waste",
+          "anchor": "2026-09-14",
+          "weeks": 2
+        },
+        {
+          "id": "blue",
+          "label": "Blue bin",
+          "colour": "#3B9BD5",
+          "description": "Paper, card and cardboard",
+          "anchor": "2026-09-21",
+          "weeks": 4
+        },
+        {
+          "id": "green",
+          "label": "Green bin",
+          "colour": "#7AB648",
+          "description": "Plastics, metals and cartons",
+          "anchor": "2026-10-05",
+          "weeks": 4
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,5 @@
+.DS_Store
+node_modules/
+
+# The original sketch. Kept locally as reference; not part of the site.
+prototype/

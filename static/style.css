@@ -1,0 +1,417 @@
+/* style.css — swee.net house style, per BRAND.md.
+ *
+ * Georgia throughout, one accent (#02aaa2), white cards on #eee, spacing on
+ * a 4px grid. The only colours outside the brand set are the bin colours
+ * themselves, which arrive as config data and are confined to swatches and
+ * the stripe down the left of a card.
+ */
+
+:root {
+  --teal: #02aaa2;
+  --teal-dark: #017f79;
+  --teal-light: #b2e8e6;
+  --teal-muted: #e0f5f4;
+
+  --ink: #222;
+  --body: #444;
+  --muted: #888;
+  --rule: #ccc;
+  --ground: #eee;
+  --surface: #fff;
+
+  --serif: Georgia, 'Times New Roman', serif;
+  --mono: Menlo, ui-monospace, monospace;
+
+  /* Bin colours vary from near-black to near-white and both extremes need
+   * to stay visible against a white card, so every swatch carries a
+   * hairline ring rather than relying on its own contrast. */
+  --hairline: rgba(34, 34, 34, 0.22);
+
+  --xs: 4px;
+  --sm: 8px;
+  --md: 16px;
+  --lg: 24px;
+  --xl: 48px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  padding: 0 0 var(--xl);
+  background: var(--ground);
+  color: var(--body);
+  font: 1em/1.6 var(--serif);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The brand mark: a seam at the top of every surface, inset by 1ex. */
+.topbar {
+  height: 10px;
+  margin: 0 1ex;
+  background: var(--teal);
+}
+
+.shell {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 var(--md);
+}
+
+/* ── masthead ─────────────────────────────────────────────────────── */
+
+.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--md);
+  padding: var(--lg) 0 var(--md);
+  flex-wrap: wrap;
+}
+
+.wordmark {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: normal;
+  color: var(--ink);
+}
+
+.account {
+  display: flex;
+  align-items: baseline;
+  gap: var(--md);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.whoami { overflow-wrap: anywhere; }
+
+/* ── controls ─────────────────────────────────────────────────────── */
+
+.button {
+  padding: 10px var(--lg);
+  border: 1.5px solid var(--teal);
+  border-radius: 4px;
+  background: var(--teal);
+  color: var(--surface);
+  font: 1rem var(--serif);
+  cursor: pointer;
+}
+
+.button:hover { background: var(--teal-dark); border-color: var(--teal-dark); }
+
+.button-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--teal-dark);
+  font: inherit;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--teal-dark);
+  outline-offset: 2px;
+}
+
+input[type='date'] {
+  padding: var(--xs) var(--sm);
+  border: 1.5px solid var(--rule);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--body);
+  font: 0.875rem var(--serif);
+}
+
+input[type='date']:focus { border-color: var(--teal); }
+
+/* ── site switch ──────────────────────────────────────────────────── */
+
+.sites {
+  display: flex;
+  gap: var(--xs);
+  margin-bottom: var(--md);
+}
+
+.sites button {
+  flex: 1;
+  /* A flex item will not shrink below its content unless told to, and a
+   * property name can easily be wider than half a phone. */
+  min-width: 0;
+  padding: var(--sm) var(--md);
+  border: 1.5px solid var(--rule);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--muted);
+  font: 1rem var(--serif);
+  cursor: pointer;
+}
+
+.sites button[aria-pressed='true'] {
+  border-color: var(--teal);
+  background: var(--teal-muted);
+  color: var(--ink);
+}
+
+/* ── cards ────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--surface);
+  border-radius: 4px;
+  padding: var(--lg);
+  margin-bottom: var(--sm);
+}
+
+.section-title {
+  margin: var(--xl) 0 var(--sm);
+  font-size: 1.125rem;
+  font-weight: normal;
+  color: var(--ink);
+}
+
+/* ── hero ─────────────────────────────────────────────────────────── */
+
+.hero {
+  display: grid;
+  grid-template-columns: 10px 1fr;
+  gap: 0 var(--lg);
+  padding: var(--lg) var(--lg) var(--lg) 0;
+  overflow: hidden;
+}
+
+.hero-body { min-width: 0; }
+
+.hero .stripe {
+  grid-row: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: calc(var(--lg) * -1) 0;
+}
+
+.hero .stripe span {
+  flex: 1;
+  background: var(--bin, var(--rule));
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+
+.count {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(3rem, 15vw, 5rem);
+  font-weight: normal;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.count .unit {
+  display: block;
+  margin-top: var(--sm);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hero-bin { margin-top: var(--lg); }
+
+.hero-bin .name {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sm);
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: normal;
+  color: var(--ink);
+}
+
+.hero[data-count='1'] .hero-bin .name { font-size: 2.5rem; line-height: 1.1; }
+
+.hero-bin .contents { margin: var(--xs) 0 0; font-size: 0.875rem; color: var(--muted); }
+
+/* With more than one bin due, each name carries a swatch; hang the
+ * description under the name rather than under the swatch. */
+.hero:not([data-count='1']) .hero-bin .contents { padding-left: 18px; }
+
+.hero .when { margin: var(--lg) 0 0; font-size: 0.875rem; color: var(--body); }
+
+.hero .moved,
+.hero .note { color: var(--muted); }
+
+.hero .note { margin: var(--xs) 0 0; font-size: 0.875rem; }
+
+/* ── upcoming ─────────────────────────────────────────────────────── */
+
+.upcoming .row {
+  display: grid;
+  grid-template-columns: 10px 1fr auto;
+  gap: 0 var(--lg);
+  align-items: center;
+  padding: var(--md) var(--lg) var(--md) 0;
+  overflow: hidden;
+}
+
+.upcoming .stripe {
+  align-self: stretch;
+  margin: calc(var(--md) * -1) 0;
+  background: var(--bin, var(--rule));
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+
+.row-body { min-width: 0; }
+
+.row-body .label { margin: 0; color: var(--ink); }
+
+.row-body .contents { margin: 0; font-size: 0.8125rem; color: var(--muted); }
+
+.away {
+  text-align: right;
+  font-size: 0.875rem;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.away span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+/* ── timetable ────────────────────────────────────────────────────── */
+
+.timetable .card { padding: var(--sm) var(--lg) var(--md); }
+
+.month {
+  margin: var(--lg) 0 var(--sm);
+  padding-top: var(--sm);
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.month:first-child { margin-top: var(--sm); border-top: 0; }
+
+.day {
+  display: flex;
+  align-items: baseline;
+  gap: var(--md);
+  padding: var(--xs) 0;
+}
+
+.day .date {
+  flex: none;
+  width: 5.5em;
+  font-size: 0.875rem;
+  color: var(--body);
+}
+
+.day.is-today .date { color: var(--teal-dark); }
+
+.day.is-today { background: var(--teal-muted); border-radius: 3px; }
+
+.chips { display: flex; flex: 1; min-width: 0; flex-wrap: wrap; gap: var(--sm) var(--md); }
+
+.chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 0.875rem;
+}
+
+/* ── swatch ───────────────────────────────────────────────────────── */
+
+.swatch {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--bin, var(--rule));
+  box-shadow: inset 0 0 0 1px var(--hairline);
+  transform: translateY(-1px);
+}
+
+/* ── sign in, empty, messages ─────────────────────────────────────── */
+
+.signin { padding: var(--xl) var(--lg); }
+
+.signin h1 {
+  margin: 0 0 var(--md);
+  font-size: 2.5rem;
+  font-weight: normal;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.signin .lede { margin: 0 0 var(--lg); color: var(--muted); }
+
+.empty h2 {
+  margin: 0 0 var(--sm);
+  font-size: 1.125rem;
+  font-weight: normal;
+  color: var(--ink);
+}
+
+.empty p { margin: 0 0 var(--md); color: var(--muted); }
+
+.warning {
+  margin: 0 0 var(--md);
+  padding: var(--sm) var(--md);
+  border-left: 3px solid var(--teal);
+  background: var(--teal-muted);
+  font-size: 0.875rem;
+  color: var(--body);
+}
+
+.banner { border-radius: 0 4px 4px 0; }
+
+.waiting { color: var(--muted); }
+
+/* ── colophon ─────────────────────────────────────────────────────── */
+
+.unscheduled {
+  margin: var(--lg) 0 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.colophon {
+  margin-top: var(--xl);
+  padding-top: var(--md);
+  border-top: 1px solid var(--rule);
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+/* The sign-in screen has no colophon; without this its rule still draws. */
+.colophon:empty { display: none; }
+
+.colophon p { margin: 0 0 var(--sm); }
+
+.colophon .council { color: var(--body); }
+
+.colophon .updated,
+.colophon label { font-family: var(--mono); font-size: 0.7rem; }
+
+.preview {
+  display: flex;
+  align-items: center;
+  gap: var(--sm);
+  flex-wrap: wrap;
+  margin-top: var(--md);
+}
+
+@media (max-width: 420px) {
+  .hero[data-count='1'] .hero-bin .name { font-size: 1.75rem; }
+  .day .date { width: 4.75em; }
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<!--
+  Security policy.
+
+  This site is static — GitHub Pages cannot set response headers — so the
+  policy travels in the document. Everything that mattered when a Go server
+  sent these headers survives here, with one exception noted below.
+
+  script-src 'self' with no inline script is what protects the OAuth tokens
+  in localStorage: this app has an origin to itself, so only code served
+  from bins.swee.net can read them. connect-src names the only two hosts the
+  app talks to, so even injected script could not post a token elsewhere.
+  These origins must match static/settings.js — test/csp.test.mjs checks it.
+
+  Not expressible in a meta tag: frame-ancestors, which browsers ignore
+  here, and X-Frame-Options, which needs a real header. So this page can be
+  framed. Framing gives no cross-origin access to storage — the same-origin
+  policy still holds — so the exposure is UI redress, and the only control
+  on the page is "Sign out". Accepted deliberately; it is the one thing
+  given up by moving off a server.
+-->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://id.swee.net https://config.swee.net; form-action 'self' https://id.swee.net; base-uri 'self'; object-src 'none'">
+
+<!-- The OAuth callback lands on / with ?code= in the query; a Referer would
+     carry that code to any subresource the page then loads. -->
+<meta name="referrer" content="no-referrer">
+
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#02aaa2">
+<title>bin days</title>
+<link rel="stylesheet" href="/static/style.css">
+<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+<link rel="apple-touch-icon" href="/static/icon-256.png">
+<link rel="manifest" href="/static/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="bin days">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<script type="module" src="/static/app.js"></script>
+</head>
+<body>
+
+<div class="topbar"></div>
+
+<div class="shell">
+  <header class="masthead">
+    <p class="wordmark">bin days</p>
+    <div class="account" id="account"></div>
+  </header>
+
+  <main id="main" aria-live="polite">
+    <p class="waiting">Loading…</p>
+  </main>
+
+  <footer class="colophon" id="colophon"></footer>
+</div>
+
+</body>
+</html>
