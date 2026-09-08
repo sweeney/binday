@@ -1,4 +1,4 @@
-# bin days
+# Bin day
 
 When the bins go out, at each swee.net property.
 **https://bins.swee.net** — a static page on GitHub Pages.

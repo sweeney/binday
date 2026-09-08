@@ -1,6 +1,6 @@
 {
-  "name": "bin days",
-  "short_name": "bin days",
+  "name": "Bin day",
+  "short_name": "Bin day",
   "description": "When the bins go out, at each swee.net property.",
   "start_url": "/",
   "scope": "/",

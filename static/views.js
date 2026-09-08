@@ -22,9 +22,6 @@ const swatch = (colour) => el('i.swatch', { vars: { '--bin': colour }, 'aria-hid
 export function signInView({ message, onSignIn }) {
   return el('section.card.signin', {}, [
     el('h1', { text: 'When do the bins go out?' }),
-    el('p.lede', {
-      text: 'Collection days for every swee.net property, from the council schedules in config.',
-    }),
     message && el('p.warning', { text: message }),
     el('button.button', { type: 'button', text: 'Sign in with swee.net', on: { click: onSignIn } }),
   ]);

@@ -346,14 +346,12 @@ input[type='date']:focus { border-color: var(--teal); }
 .signin { padding: var(--xl) var(--lg); }
 
 .signin h1 {
-  margin: 0 0 var(--md);
+  margin: 0 0 var(--lg);
   font-size: 2.5rem;
   font-weight: normal;
   line-height: 1.1;
   color: var(--ink);
 }
-
-.signin .lede { margin: 0 0 var(--lg); color: var(--muted); }
 
 .empty h2 {
   margin: 0 0 var(--sm);
