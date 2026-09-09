@@ -13,6 +13,20 @@ schedule read is cached in `localStorage`. If it is unreachable, the page
 still loads from the CDN and still tells you which bin goes out — it just
 says when it last heard from config.
 
+### Staying current
+
+A page that is left open re-reads config on the hour, and re-reads it on
+becoming visible again if what it holds is more than fifteen minutes old —
+the second being the one that matters on a phone, where the app is resumed
+rather than reloaded and background timers are throttled or suspended. It
+also re-renders at midnight, so "Today" is never wrong for the length of a
+timer tick.
+
+None of this happens while a date has been chosen by hand: inspecting the
+festive schedule in September should stay put. And a background re-read that
+fails never takes the page away from you — it leaves the schedule on screen
+and says in the banner that it is the last one it heard.
+
 ---
 
 ## How it fits together

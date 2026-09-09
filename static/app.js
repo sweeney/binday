@@ -24,6 +24,13 @@ import {
   warningView,
 } from './views.js';
 
+// How often an open page re-reads config, and how stale the data must be
+// before returning to the page is reason enough to re-read it. Schedules
+// change when a council publishes festive dates, which is to say rarely —
+// these are about not showing yesterday's answer, not about being live.
+const REFRESH_INTERVAL_MS = 60 * 60 * 1000;
+const STALE_AFTER_MS = 15 * 60 * 1000;
+
 const main = document.getElementById('main');
 const accountEl = document.getElementById('account');
 const colophonEl = document.getElementById('colophon');
@@ -201,6 +208,60 @@ async function loadAndRender() {
   render();
 }
 
+// ── staying current ─────────────────────────────────────────────────────
+
+// Re-read config without ever taking the page away from the reader.
+//
+// This is the difference between this and loadAndRender(): that one runs
+// because someone opened the app and can reasonably be sent to a sign-in
+// page. This one runs on a timer, so a failure must leave what is on screen
+// alone and say so in the banner. Being quietly told the schedule is an hour
+// old beats being silently signed out while looking at it.
+async function refreshQuietly() {
+  if (state.pinned || !auth.isSignedIn() || !state.sites.length) return;
+
+  try {
+    adopt(await api.loadSites());
+    state.warning = null;
+  } catch (error) {
+    const reason =
+      error instanceof auth.SessionExpired
+        ? 'your session expired — reload to sign in again'
+        : error.message;
+    state.warning = `Showing the last known schedule — ${reason}`;
+  }
+
+  state.viewDate = today();
+  render();
+}
+
+// True if the data on screen is old enough to be worth a round-trip.
+function isStale() {
+  if (!state.fetchedAt) return true;
+  const age = Date.now() - Date.parse(state.fetchedAt);
+  return !Number.isFinite(age) || age > STALE_AFTER_MS;
+}
+
+// Re-render at midnight, rather than letting the hourly tick discover the
+// new day up to an hour late. "Today" being wrong is the one error a bin app
+// cannot afford, and the fix costs no network.
+function scheduleDateRollover() {
+  const now = new Date();
+  const midnight = new Date(now);
+  midnight.setHours(24, 0, 0, 0);
+
+  // A second past the hour, so today() has certainly rolled over by the time
+  // this runs. A sleeping laptop fires it late, which is harmless: the date
+  // is read fresh, never counted.
+  setTimeout(() => {
+    if (!state.pinned && auth.isSignedIn() && state.sites.length) {
+      state.viewDate = today();
+      render();
+    }
+    scheduleDateRollover();
+  }, midnight - now + 1000);
+}
+
 // ── boot ────────────────────────────────────────────────────────────────
 
 async function boot() {
@@ -219,15 +280,28 @@ async function boot() {
   showAccount();
   await loadAndRender();
 
-  // A relaunch from the home screen resumes a page that may have been open
-  // since yesterday, when "tomorrow" meant a different day.
+  // An open page re-reads config on the hour. This is the case of a page left
+  // in front of someone — a tablet on a wall, a tab on a desktop — where
+  // nothing else would ever prompt a re-read.
+  setInterval(() => {
+    if (isStale()) refreshQuietly();
+  }, REFRESH_INTERVAL_MS);
+
+  scheduleDateRollover();
+
+  // Coming back to the page is the moment that matters on a phone, where the
+  // app is resumed rather than reloaded and background timers are throttled
+  // or suspended outright. Fix the date immediately — it is free — and re-read
+  // config only if what we hold has gone stale.
   addEventListener('visibilitychange', () => {
     if (document.visibilityState !== 'visible') return;
     if (!auth.isSignedIn() || !state.sites.length || state.pinned) return;
+
     if (state.viewDate !== today()) {
       state.viewDate = today();
       render();
     }
+    if (isStale()) refreshQuietly();
   });
 
   addEventListener('hashchange', () => {
